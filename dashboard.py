@@ -10,41 +10,110 @@ PAGE = """
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Abrasion Test Monitor</title>
-    <meta http-equiv="refresh" content="0">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: sans-serif; text-align: center; background: #1a1a2e; color: #eee; padding: 40px; }
-        h1 { font-size: 1.2em; color: #aaa; }
-        .count { font-size: 5em; font-weight: bold; color: #4ade80; }
-        canvas { max-width: 700px; margin: 30px auto; }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            text-align: center;
+            background: #1B2A41;
+            color: #E2F8F8;
+            padding: 20px;
+            margin: 0;
+            min-height: 100vh;
+        }
+        h1 {
+            font-size: clamp(1.4em, 5vw, 2em);
+            color: #A9C8DE;
+            margin-bottom: 8px;
+        }
+        .description {
+            font-size: clamp(0.9em, 3vw, 1.1em);
+            color: #A9C8DE;
+            opacity: 0.8;
+            max-width: 500px;
+            margin: 0 auto 30px auto;
+            line-height: 1.5;
+        }
+        .count-label {
+            font-size: clamp(0.9em, 3vw, 1.1em);
+            color: #A9C8DE;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .count {
+            font-size: clamp(4em, 20vw, 7em);
+            font-weight: bold;
+            color: #F0623A;
+            margin: 10px 0 30px 0;
+            line-height: 1;
+        }
+        .chart-container {
+            max-width: 700px;
+            width: 100%;
+            margin: 0 auto 30px auto;
+            background: #2E4A6E;
+            border-radius: 16px;
+            padding: 20px;
+        }
         .download-btn {
             display: inline-block;
-            margin-top: 20px;
-            padding: 12px 24px;
-            background: #4ade80;
-            color: #1a1a2e;
+            margin-top: 10px;
+            padding: 16px 32px;
+            background: #A9C8DE;
+            color: #1B2A41;
             font-weight: bold;
             text-decoration: none;
-            border-radius: 8px;
-            font-size: 1em;
+            border-radius: 10px;
+            font-size: clamp(1em, 3vw, 1.15em);
         }
-        .download-btn:hover { background: #86efac; }
+        .download-btn:active { background: #E2F8F8; }
     </style>
 </head>
 <body>
-    <h1>Abrasion Test - Cycle Count</h1>
+    <h1>Abrasion Test Monitor</h1>
+    <p class="description">
+        Live cycle count from the solar panel brush abrasion rig.
+        Updates automatically every 3 seconds.
+    </p>
+
+    <div class="count-label">Cycle Count</div>
     <div class="count" id="count">--</div>
-    <canvas id="chart"></canvas>
-    <br>
+
+    <div class="chart-container">
+        <canvas id="chart"></canvas>
+    </div>
+
     <a href="/api/download" class="download-btn">Download History (CSV)</a>
 
     <script>
         const ctx = document.getElementById('chart').getContext('2d');
         let chart = new Chart(ctx, {
             type: 'line',
-            data: { labels: [], datasets: [{ label: 'Cycle Count', data: [], borderColor: '#4ade80', tension: 0.2 }] },
-            options: { scales: { y: { beginAtZero: true } } }
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Cycle Count',
+                    data: [],
+                    borderColor: '#F0623A',
+                    backgroundColor: 'rgba(240, 98, 58, 0.15)',
+                    fill: true,
+                    tension: 0.2,
+                    pointBackgroundColor: '#F0623A'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true, ticks: { color: '#A9C8DE' }, grid: { color: '#1B2A41' } },
+                    x: { ticks: { color: '#A9C8DE' }, grid: { color: '#1B2A41' } }
+                },
+                plugins: {
+                    legend: { labels: { color: '#A9C8DE' } }
+                }
+            }
         });
 
         async function refresh() {
