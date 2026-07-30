@@ -1,0 +1,14 @@
+[Unit]
+Description=Uno Serial Data Reader
+After=network.target dev-ttyACM0.device
+Wants=dev-ttyACM0.device
+
+[Service]
+ExecStartPre=/bin/sleep 5
+ExecStart=/usr/bin/python3 /home/pi/data_reader.py
+Restart=always
+RestartSec=10
+User=pi
+
+[Install]
+WantedBy=multi-user.target
