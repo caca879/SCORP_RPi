@@ -49,8 +49,8 @@ sudo argonone-config
 ### 4. Create the project folder and scripts
 
 ```bash
-mkdir -p /home/pi/abrasion-monitor
-cd /home/pi/abrasion-monitor
+mkdir -p /home/scorp/abrasion-monitor
+cd /home/scorp/abrasion-monitor
 ```
 
 Create `data_reader.py` and `dashboard.py` in this folder (see the
@@ -94,7 +94,7 @@ ExecStartPre=/bin/sleep 5
 ExecStart=/usr/bin/python3 /home/pi/abrasion-monitor/data_reader.py
 Restart=always
 RestartSec=10
-User=pi
+User=scorp
 
 [Install]
 WantedBy=multi-user.target
@@ -111,7 +111,7 @@ After=network.target
 ExecStart=/usr/bin/python3 /home/pi/abrasion-monitor/dashboard.py
 Restart=always
 RestartSec=10
-User=pi
+User=scorp
 
 [Install]
 WantedBy=multi-user.target
